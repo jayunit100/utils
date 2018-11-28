@@ -1,6 +1,8 @@
 ## Manage python
 
 echo "# Usage : eval $(./pyme.sh 3.3.0)"
+echo "# python --version"
+
 
 function install_pyenv {
     echo "# Pyme ~ Installing pyenv ..."
