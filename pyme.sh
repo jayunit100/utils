@@ -1,5 +1,7 @@
 ## Manage python
 
+echo "# Usage : eval $(./pyme.sh 3.3.0)"
+
 function install_pyenv {
     echo "# Pyme ~ Installing pyenv ..."
     if which curl | grep -q curl ; then 
