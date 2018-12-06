@@ -2,17 +2,15 @@ import yaml
 import json
 import os
 
-# This program takes a yaml 
-# 
-#
-#
-#
 ### USAGE
-# Make a dir called k8s-all
-# Inside that dir: dump all sorts of yaml files, with image: ${IMAGE}, and so on,
+# - Make a dir called k8s-all/
+# - Inside that dir: put kube (or any type of) yaml files, with env substitions as needed. ie. 
+# image: ${IMAGE}
+# name: ${MYNAME}
 # i.e. parameterize like your doing envsubst all day long.
-# Output: A stream of parameterized yaml.
-# Result: You can throw helm/short/envsubst whatever other complex program your using to sed replace away.
+# - Output: A stream of parameterized yaml.
+# - Result: You can throw helm/short/envsubst whatever other complex program your using to sed replace away.
+# - Make sure you update params below to have your parameters that you want to substitute.
 params = {
     "${IMAGE}":"nginx:1.0", # b/c every kube example needs to have nginx somewhere
     "${B}":"b, look, a substitution",
