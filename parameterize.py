@@ -1,19 +1,12 @@
-params = {
-    "${NAME}":"jay",
-    "${NAME2}":"jaysus",
-}
+import yaml
+import os
 
-inputJson = {
-    "id100":{
-        "address":"123 j st","name":"${NAME}"
-    },
-    "id101":{
-        "address":"123 j st","name":"${NAME}","otherName":"${NAME2}"
-    }
+params = {
+    "${RABBITMQ_HOST}":"jayyyyyyyy",
 }
 
 def getSub(input):
-    for key,value in subs.items():
+    for key,value in params.items():
         # if not needed, but useful for debugging since i suck at python
         if input.find(key) >= 0:
             return input.replace(key,value)
@@ -23,10 +16,10 @@ def varReplace(input):
     if type(input) is list:
         for i in range(len(input)):
             print("--")
-            if type(value) is string:
-                input[i] = getSub(d[i])
+            if type(input[i]) is str:
+                input[i] = getSub(input[i])
             else:
-                input[i] = varReplace(d[i])
+                input[i] = varReplace(input[i])
 
     if type(input) is dict:
         for key, value in input.items():
@@ -36,5 +29,11 @@ def varReplace(input):
                 input[key] = varReplace(value)
     return input
 
-parameterizedYaml=varReplace(inputJson)
-print(parameterizedYaml)
+for f in os.listdir("my-kube-yamls"):
+    with open("my-kube-yamls/"+f, "r") as stream:
+        try:
+            yamls=list(yaml.load_all(stream))
+            for i in range(len(yamls)):
+                print(varReplace(yamls[i]))
+        except yaml.YAMLError as exc:
+            print(exc)
