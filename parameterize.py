@@ -2,7 +2,7 @@ import yaml
 import os
 
 params = {
-    "${RABBITMQ_HOST}":"jayyyyyyyy",
+    "${MY_IMAGE_NAME}":"nginx:1.0.0",
 }
 
 def getSub(input):
