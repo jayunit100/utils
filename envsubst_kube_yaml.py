@@ -1,8 +1,22 @@
 import yaml
+import json
 import os
 
+# This program takes a yaml 
+# 
+#
+#
+#
+### USAGE
+# Make a dir called k8s-all
+# Inside that dir: dump all sorts of yaml files, with image: ${IMAGE}, and so on,
+# i.e. parameterize like your doing envsubst all day long.
+# Output: A stream of parameterized yaml.
+# Result: You can throw helm/short/envsubst whatever other complex program your using to sed replace away.
 params = {
-    "${MY_IMAGE_NAME}":"nginx:1.0.0",
+    "${IMAGE}":"nginx:1.0", # b/c every kube example needs to have nginx somewhere
+    "${B}":"b, look, a substitution",
+    "${C}":"another substituted value"
 }
 
 def getSub(input):
@@ -15,7 +29,6 @@ def getSub(input):
 def varReplace(input):
     if type(input) is list:
         for i in range(len(input)):
-            print("--")
             if type(input[i]) is str:
                 input[i] = getSub(input[i])
             else:
@@ -29,11 +42,12 @@ def varReplace(input):
                 input[key] = varReplace(value)
     return input
 
-for f in os.listdir("my-kube-yamls"):
-    with open("my-kube-yamls/"+f, "r") as stream:
+for f in os.listdir("k8s-all"):
+    with open("k8s-all/"+f, "r") as stream:
         try:
             yamls=list(yaml.load_all(stream))
             for i in range(len(yamls)):
-                print(varReplace(yamls[i]))
+                substitutedYaml=varReplace(yamls[i])
+                print (yaml.dump(yaml.load(json.dumps(substitutedYaml)), default_flow_style=False))
         except yaml.YAMLError as exc:
             print(exc)
