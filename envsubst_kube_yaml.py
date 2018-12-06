@@ -2,29 +2,21 @@ import yaml
 import json
 import os
 
-### USAGE
-# - Make a dir called k8s-all/
-# - Inside that dir: put kube (or any type of) yaml files, with env substitions as needed. ie. 
-# image: ${IMAGE}
-# name: ${MYNAME}
-# i.e. parameterize like your doing envsubst all day long.
-# - Output: A stream of parameterized yaml.
-# - Result: You can throw helm/short/envsubst whatever other complex program your using to sed replace away.
-# - Make sure you update params below to have your parameters that you want to substitute.
-params = {
-    "${IMAGE}":"nginx:1.0", # b/c every kube example needs to have nginx somewhere
-    "${B}":"b, look, a substitution",
-    "${C}":"another substituted value"
+############### TODO Fill these in w/ reasonable defaults.
+exampleParams = {
+    "${CASSANDRA_HOST}":"",
+    # ...
 }
 
-def getSub(input):
-    for key,value in params.items():
-        # if not needed, but useful for debugging since i suck at python
-        if input.find(key) >= 0:
-            return input.replace(key,value)
-    return input
+# varReplace replaces input yaml with env vars in the params object.
+def varReplace(input, map):
+    def getSub(input):
+        for key,value in map.items():
+            # if not needed, but useful for debugging since i suck at python
+            if input.find(key) >= 0:
+                return input.replace(key,value)
+        return input
 
-def varReplace(input):
     if type(input) is list:
         for i in range(len(input)):
             if type(input[i]) is str:
@@ -40,12 +32,21 @@ def varReplace(input):
                 input[key] = varReplace(value)
     return input
 
-for f in os.listdir("k8s-all"):
-    with open("k8s-all/"+f, "r") as stream:
-        try:
-            yamls=list(yaml.load_all(stream))
-            for i in range(len(yamls)):
-                substitutedYaml=varReplace(yamls[i])
-                print (yaml.dump(yaml.load(json.dumps(substitutedYaml)), default_flow_style=False))
-        except yaml.YAMLError as exc:
-            print(exc)
+# reads all yaml files in a directory, and substitutes them.  Returns
+# corresponding yamls as a dictionary.
+def getSubstitutedOrchestrationAsDict(dir, map):
+    for f in os.listdir(dir):
+        with open(dir+"/"+f, "r") as stream:
+            try:
+                yamls=list(yaml.load_all(stream))
+                newyamls=[]
+                for i in range(len(yamls)):
+                    newyamls += varReplace(yamls[i])
+                for i in range(len(newyamls)):
+                    print (yaml.dump(yaml.load(json.dumps(substitutedYaml)), default_flow_style=False))
+            except yaml.YAMLError as exc:
+                print(exc)
+
+#### EXAMPLE USAGE
+# myKubeYAMLS = getSubstitutedOrchestrationAsDict("k8s-all",exampleParams)
+# print(myKubeYamls | kubectl create -f )
