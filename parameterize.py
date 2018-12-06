@@ -36,5 +36,5 @@ def varReplace(input):
                 input[key] = varReplace(value)
     return input
 
-parameterizedYaml=varReplace(a)
+parameterizedYaml=varReplace(inputJson)
 print(parameterizedYaml)
