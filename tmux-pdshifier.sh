@@ -6,9 +6,7 @@ user=""
 #### EDIT ABOVE THIS LINE
 
 [ -f ./hosts ] && echo "Hosts file found: `cat hosts`" || echo "No 'hosts' file, make a pdsh hosts file and retry.'"
-
 echo "Checks passed, starting tmux session for this cluster !"
-tmux kill-session -t jayv-tmux-hosts #-/Users/jayv/work/clusters/ec2-kube-0
 
 #### Now create sessions
 
