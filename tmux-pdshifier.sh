@@ -1,15 +1,13 @@
 #!/bin/bash
-# A very useful and dumb tmux manager script for saved hosts
 
+# CHANGE THIS IF YOU DONT HAVE user@host formatted pdsh files !!! More parameters to be added here eventually if needed.
 user=""
 
-#### EDIT ABOVE THIS LINE
-
+# DON'T EDIT BELOW THIS LINE
 [ -f ./hosts ] && echo "Hosts file found: `cat hosts`" || echo "No 'hosts' file, make a pdsh hosts file and retry.'"
 echo "Checks passed, starting tmux session for this cluster !"
 
 #### Now create sessions
-
 set -e
 set -x
 
