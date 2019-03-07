@@ -12,7 +12,9 @@ set -e
 set -x
 
 SESSION=${USER}-tmux-hosts
-echo "Creating new tmux session"
+echo "Creating new tmux session, killing old session first in 2 seconds !!!"
+sleep 2
+tmux kill-session -t $SESSION
 tmux -2 new-session -d -s $SESSION
 
 echo "created window"
@@ -25,7 +27,6 @@ for i in `cat ./hosts` ; do
       tmux new-window -t $SESSION:1 -n '${curr_window}'
   fi
   tmux ls
-  sleep 2
   num=$((curr_window - 1))
   tmux list-panes -t $SESSION
   tmux select-pane -t $SESSION:.$num
